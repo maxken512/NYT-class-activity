@@ -5,3 +5,52 @@
 // "search-button"
 // "clear-button"
 // "results"
+// 561pNqss0WJepCioRXwUqi4ydEjx1tze
+
+
+$(document).ready(function(){
+    var searchTerm = $("#search-term");
+    var recordsNumber = $("#records-number");
+    var startYear = $("#start-year");
+    var endYear = $("#end-year");
+    var searchButtonId = $("#search-button");
+    var clearButton = $("#clear-button");
+
+    var searchText = "";
+    var numRecords = 0;
+    var startYear = 0;
+    var endYear = 0;
+
+    searchButtonId.click(function(){
+        event.preventDefault();
+        searchText = searchTerm.val();
+        record = recordsNumber.val();
+        startYr = startYear.val();
+        endYr = endYear.val();
+
+        var queryUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchText + "?begin_date=" + startYr + "?end_date=" + endYr + "?page=" + record + "&api-key561pNqss0WJepCioRXwUqi4ydEjx1tze"
+        
+            $.ajax({
+                url: queryUrl,
+                method: "GET"
+            }) }).then(function(response){
+                //console.log(response)
+                var articleBody = $('#article')
+                for(var i = 0; i < record; i++){
+                    var titleDiv = $('<h1>')
+                    var articleTitle = response.response.docs[i].headline.main;
+                    //console.log(articleTitle)
+                    titleDiv.text(articleTitle);
+                    var authorDiv = $('<h2>')
+                    var articleAuthor = response.response.docs[i].byline.original;
+                    //console.log(articleAuthor)
+                    authorDiv.text(articleAuthor);
+                    var dateDiv = $('<p>')
+                    var articleDate = response.response.docs[i].pub_date;
+                    //console.log(articleDate)
+                    dateDiv.text(articleDate);
+                    articleBody.append(titleDiv, authorDiv, dateDiv);
+                }
+            })
+    
+});
